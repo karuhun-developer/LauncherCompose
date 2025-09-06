@@ -26,7 +26,7 @@ data class GetContentItemsResponse(
 	val image: Any? = null,
 
 	@field:SerializedName("is_active")
-	val isActive: Int? = null,
+	val isActive: Boolean? = null,
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String? = null,

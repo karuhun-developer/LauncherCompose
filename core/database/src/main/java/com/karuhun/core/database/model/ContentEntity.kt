@@ -28,21 +28,21 @@ data class ContentEntity(
     val id: Int,
     val name: String?,
     val image: String?,
-    val isActive: Int?,
+    val isActive: Boolean?,
 )
 
 fun ContentEntity.toModel() = Content(
     id = id,
     title = name,
     image = image,
-    isActive = isActive?.let { it == 1 },
+    isActive = isActive,
 )
 
 fun Content.toEntity() = ContentEntity(
     id = id ?: 0,
     name = title,
     image = image,
-    isActive = if (isActive == true) 1 else 0,
+    isActive = isActive,
 )
 
 fun List<Content>.toEntity() : List<ContentEntity> {

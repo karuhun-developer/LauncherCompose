@@ -23,7 +23,7 @@ import com.karuhun.core.model.Content
 data class GetContentsResponse(
 
 	@field:SerializedName("is_active")
-	val isActive: Int? = null,
+	val isActive: Boolean? = null,
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String? = null,
@@ -50,7 +50,7 @@ fun List<GetContentsResponse>.toDomainList(): List<Content> {
             id = response.id.orZero(),
             title = response.name.orEmpty(),
             image = response.image.orEmpty(),
-            isActive = response.isActive.orZero() == 1,
+            isActive = response.isActive,
         )
     }
 }

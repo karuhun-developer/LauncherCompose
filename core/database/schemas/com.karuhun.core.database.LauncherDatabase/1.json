@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "597793484c667df52a4901d2150aee40",
+    "identityHash": "15d5482f377ea5123006ed48530da754",
     "entities": [
       {
         "tableName": "hotel",
@@ -148,7 +148,7 @@
       },
       {
         "tableName": "content_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `image` TEXT, `description` TEXT, `contentId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`contentId`) REFERENCES `content`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `image` TEXT, `description` TEXT, `contentId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -188,19 +188,7 @@
           ]
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "content",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "contentId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "application",
@@ -350,7 +338,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '597793484c667df52a4901d2150aee40')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '15d5482f377ea5123006ed48530da754')"
     ]
   }
 }

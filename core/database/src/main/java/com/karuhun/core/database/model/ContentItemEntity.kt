@@ -23,14 +23,6 @@ import com.karuhun.core.model.ContentItem
 
 @Entity(
     tableName = "content_item",
-    foreignKeys = [
-        ForeignKey(
-            entity = ContentEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["contentId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
 )
 data class ContentItemEntity(
     @PrimaryKey

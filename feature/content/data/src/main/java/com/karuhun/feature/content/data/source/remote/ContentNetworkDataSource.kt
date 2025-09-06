@@ -56,7 +56,7 @@ class ContentNetworkDataSource @Inject constructor(
             do {
                 val params = mapOf(
                     "order" to "asc",
-                    "orderBy" to "feature_categories.version",
+                    "orderBy" to "contents.version",
                     "paginate" to "10",
                     "page" to "$currentPage",
                     "after" to after.toString()
@@ -98,7 +98,7 @@ class ContentNetworkDataSource @Inject constructor(
             do {
                 val params = mapOf(
                     "order" to "asc",
-                    "orderBy" to "feature_items.version",
+                    "orderBy" to "content_items.version",
                     "paginate" to "10",
                     "page" to "$currentPage",
                     "after" to after.toString()

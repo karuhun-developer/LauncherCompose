@@ -27,22 +27,22 @@ import retrofit2.http.QueryMap
 
 interface ContentApiService {
 
-    @GET("features")
+    @GET("contents")
     suspend fun getContents(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<GetContentsResponse>>
 
-    @GET("changelist/features")
+    @GET("changelist/contents")
     suspend fun getContentChangeList(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<NetworkChangeList>>
 
-    @GET("feature-items")
+    @GET("content-items")
     suspend fun getContentItems(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<GetContentItemsResponse>>
 
-    @GET("changelist/feature-items")
+    @GET("changelist/content-items")
     suspend fun getContentItemChangeList(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<NetworkChangeList>>
