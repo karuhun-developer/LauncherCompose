@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,26 +33,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.Icon
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import com.karuhun.launcher.core.designsystem.theme.AppTheme
+import com.karuhun.launcher.core.designsystem.icon.WeatherIcons
+import com.karuhun.launcher.core.designsystem.icon.WeatherIconsFont
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
-    guestName: String,
     roomNumber: String,
     date: String,
     temperature: String,
     imageUrl: String,
+    weatherText: String,
 ) {
     Row(
         modifier = modifier.padding(
             horizontal = 16.dp,
-            vertical = 8.dp
+            vertical = 8.dp,
         ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -70,29 +68,6 @@ fun TopBar(
             )
 
             Spacer(modifier = Modifier.width(16.dp))
-
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxHeight(),
-//                verticalArrangement = Arrangement.spacedBy(2.dp),
-//            ) {
-//                Text(
-//                    text = "Welcome",
-//                    style = MaterialTheme.typography.headlineSmall.copy(
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 18.sp
-//                    ),
-//                    color = Color.White,
-//                )
-//                Text(
-//                    text = guestName,
-//                    style = MaterialTheme.typography.headlineMedium.copy(
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp,
-//                    ),
-//                    color = Color.White,
-//                )
-//            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -104,16 +79,27 @@ fun TopBar(
             modifier = Modifier.align(Alignment.CenterVertically),
         )
         Spacer(modifier = Modifier.width(24.dp))
-        Text(text = date, color = Color(0xFFEFEFEF), fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
+        Text(
+            text = date,
+            color = Color(0xFFEFEFEF),
+            fontSize = 18.sp,
+            modifier = Modifier.align(Alignment.CenterVertically),
+        )
         Spacer(modifier = Modifier.width(24.dp))
-        Icon(
-            Icons.Default.WbSunny,
-            contentDescription = "Weather",
-            tint = Color.Yellow,
+        Text(
+            text = WeatherIcons.getWeatherIcon(weatherText),
+            color = Color(0xFFEFEFEF),
+            fontSize = 24.sp,
+            fontFamily = WeatherIconsFont,
             modifier = Modifier.align(Alignment.CenterVertically),
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = temperature, color = Color(0xFFEFEFEF), fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
+        Text(
+            text = temperature,
+            color = Color(0xFFEFEFEF),
+            fontSize = 18.sp,
+            modifier = Modifier.align(Alignment.CenterVertically),
+        )
         Spacer(modifier = Modifier.width(24.dp))
         TextClock(
             modifier = Modifier.align(Alignment.CenterVertically),
@@ -130,12 +116,11 @@ fun TopBarPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp),
-            guestName = "Mr. John Doe",
             roomNumber = "101",
             date = "July 26, 2024",
             temperature = "25°C",
             imageUrl = "",
+            weatherText = "03n",
         )
     }
 }
-

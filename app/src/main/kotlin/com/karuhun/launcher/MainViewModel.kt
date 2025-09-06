@@ -23,6 +23,7 @@ import com.karuhun.core.common.onSuccess
 import com.karuhun.core.data.util.SyncManager
 import com.karuhun.core.domain.usecase.GetHotelProfileUseCase
 import com.karuhun.core.domain.usecase.GetRoomDetailUseCase
+import com.karuhun.core.domain.usecase.GetWeatherUseCase
 import com.karuhun.core.ui.navigation.delegate.mvi.MVI
 import com.karuhun.core.ui.navigation.delegate.mvi.mvi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getHotelProfileUseCase: GetHotelProfileUseCase,
     private val getRoomDetailUseCase: GetRoomDetailUseCase,
+    private val getWeatherUseCase: GetWeatherUseCase,
     private val syncManager: SyncManager
 ) : ViewModel(),
     MVI<MainContract.UiState, MainContract.UiAction, MainContract.UiEffect> by mvi(initialState = MainContract.UiState()) {
@@ -57,6 +59,8 @@ class MainViewModel @Inject constructor(
             MainContract.UiAction.SubscribeSyncStatus -> {
                 subscribeSyncStatus()
             }
+
+            MainContract.UiAction.LoadWeather -> loadWeather()
         }
     }
 
@@ -85,6 +89,18 @@ class MainViewModel @Inject constructor(
                         isLoading = false,
                         roomDetail = it
                     )
+                }
+            }
+            .onFailure {
+
+            }
+    }
+
+    private fun loadWeather() = viewModelScope.launch {
+        getWeatherUseCase()
+            .onSuccess {
+                updateUiState {
+                    copy(weather = it)
                 }
             }
             .onFailure {

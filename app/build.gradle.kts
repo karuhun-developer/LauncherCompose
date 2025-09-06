@@ -80,6 +80,7 @@ dependencies {
     implementation(projects.feature.hotelProfile.data)
 
     implementation(projects.feature.home.data)
+    implementation(projects.feature.weather.data)
 
     implementation(projects.feature.screensaver.ui)
 

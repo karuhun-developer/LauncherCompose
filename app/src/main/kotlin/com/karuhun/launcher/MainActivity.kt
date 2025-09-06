@@ -152,11 +152,11 @@ fun LauncherApplication(
             TopBar(
                 modifier = Modifier
                     .height(80.dp),
-                guestName = uiState.roomDetail?.guestName.orEmpty(),
                 roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
                 date = "06 April 2020",
-                temperature = "30°C",
-                imageUrl = uiState.hotelProfile?.logoWhite.orEmpty()
+                temperature = "${uiState.weather?.temp?.toInt()}°C",
+                imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
+                weatherText = uiState.weather?.icon.orEmpty()
             )
             Row(
                 modifier = Modifier

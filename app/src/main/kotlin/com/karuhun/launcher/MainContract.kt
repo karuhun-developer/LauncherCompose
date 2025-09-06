@@ -18,6 +18,7 @@ package com.karuhun.launcher
 
 import com.karuhun.core.datastore.HotelProfile
 import com.karuhun.core.model.RoomDetail
+import com.karuhun.core.model.Weather
 
 object MainContract {
     data class UiState(
@@ -26,7 +27,8 @@ object MainContract {
         val isRefreshing: Boolean = false,
         val hotelProfile: HotelProfile? = HotelProfile.Empty,
         val roomDetail: RoomDetail? = RoomDetail.Empty,
-        val isSyncing: Boolean = false
+        val isSyncing: Boolean = false,
+        val weather: Weather? = null
     )
     sealed interface UiEffect {
         data class ShowError(val message: String) : UiEffect
@@ -38,5 +40,6 @@ object MainContract {
         data object LoadHotelProfile : UiAction
         data object LoadRoomDetail : UiAction
         data object SubscribeSyncStatus: UiAction
+        data object LoadWeather : UiAction
     }
 }
