@@ -25,22 +25,22 @@ import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface RestaurantApiService {
-    @GET("food-category")
+    @GET("foods/categories")
     suspend fun getFoodCategories(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<GetCategoryResponse>>
 
-    @GET("changelist/food-category")
+    @GET("changelist/foods/categories")
     suspend fun getFoodCategoryChangeList(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<NetworkChangeList>>
 
-    @GET("food")
+    @GET("foods/items")
     suspend fun getFoods(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<GetFoodsResponse>>
 
-    @GET("changelist/food")
+    @GET("changelist/foods/items")
     suspend fun getFoodChangeList(
         @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<BasePaginationResponse<NetworkChangeList>>

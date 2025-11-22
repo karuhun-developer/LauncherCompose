@@ -28,6 +28,9 @@ import javax.inject.Named
 import javax.inject.Singleton
 import com.karuhun.core.network.BuildConfig
 import com.karuhun.core.network.interceptor.AuthInterceptor
+import java.net.InetSocketAddress
+import java.net.Proxy
+import javax.net.ssl.HostnameVerifier
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -51,10 +54,23 @@ internal object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder()
+        val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
-            .build()
+
+        if(BuildConfig.DEBUG) {
+            val proxy = Proxy(
+                Proxy.Type.HTTP,
+                InetSocketAddress(BuildConfig.PROXY_IP, BuildConfig.PROXY_PORT.toInt())
+            )
+            okHttpClient.proxy(proxy)
+
+            val trustManager = createInsecureTrustManager()
+            val sslSocketFactory = createInsecureSslSocketFactory(trustManager)
+            okHttpClient.sslSocketFactory(sslSocketFactory, trustManager)
+            okHttpClient.hostnameVerifier(HostnameVerifier { _, _ -> true })
+        }
+        return okHttpClient.build()
     }
 
     @Provides

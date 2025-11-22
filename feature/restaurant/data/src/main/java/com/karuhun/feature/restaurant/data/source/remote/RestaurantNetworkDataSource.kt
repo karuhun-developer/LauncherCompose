@@ -100,7 +100,7 @@ class RestaurantNetworkDataSource @Inject constructor(
             do {
                 val params = mapOf(
                     "order" to "asc",
-                    "orderBy" to "foods.version",
+                    "orderBy" to "food.version",
                     "paginate" to "10",
                     "page" to "$currentPage",
                     "after" to after.toString()

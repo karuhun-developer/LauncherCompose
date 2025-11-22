@@ -17,7 +17,6 @@
 package com.karuhun.core.data
 
 import android.util.Log
-import com.karuhun.core.common.Resource
 import com.karuhun.core.datastore.ChangeListVersions
 import com.karuhun.core.network.model.NetworkChangeList
 import kotlin.coroutines.cancellation.CancellationException
@@ -82,7 +81,7 @@ suspend fun Synchronizer.changeListSync(
     val currentVersion = versionReader(getChangeListVersions())
     val changeList = changeListFetcher(currentVersion)
     if (changeList.isEmpty()) return@suspendRunCatching true
-    val (deleted, updated) = changeList.partition(NetworkChangeList::isDeleted)
+    val (deleted, updated) = changeList.partition{ it.deletedAt != null }
 
     modelDeleter(deleted.map { it.id })
     modelUpdater(updated.map { it.id })

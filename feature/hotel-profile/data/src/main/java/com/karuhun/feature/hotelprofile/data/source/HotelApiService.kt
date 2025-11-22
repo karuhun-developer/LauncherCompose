@@ -23,10 +23,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface HotelApiService {
-    @GET("hotel")
+    @GET("tenant")
     suspend fun getHotelProfile(): BaseResponse<GetHotelProfileResponse>
 
-    @GET("room/{id}")
+    @GET("rooms/items/{id}")
     suspend fun getRoomDetail(
         @Path("id") id: String
     ): BaseResponse<GetRoomDetailResponse>

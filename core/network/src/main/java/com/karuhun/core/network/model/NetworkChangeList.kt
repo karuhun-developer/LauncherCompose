@@ -20,12 +20,12 @@ import com.google.gson.annotations.SerializedName
 
 data class NetworkChangeList(
 
-	@field:SerializedName("is_deleted")
-	val isDeleted: Boolean,
+    @field:SerializedName("deleted_at")
+	val deletedAt: String?,
 
-	@field:SerializedName("id")
+    @field:SerializedName("id")
 	val id: Int,
 
-	@field:SerializedName("version")
+    @field:SerializedName("version")
 	val version: Int
 )
