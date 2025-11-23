@@ -19,6 +19,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Required to query and launch other apps on Android 11+ (API 30+) -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
     <!--
     Firebase automatically adds these AD_ID and ADSERVICES permissions, even though we don't use them.
     If you use these permissions you must declare how you're using them to Google Play, otherwise the

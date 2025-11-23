@@ -46,7 +46,7 @@ fun ContentItem.toEntity() = ContentItemEntity(
     name = name,
     image = image,
     description = description,
-    contentId = contentId ?: 0
+    contentId = contentId
 )
 
 fun List<ContentItemEntity>.toDomainModel() = map { it.toDomainModel() }

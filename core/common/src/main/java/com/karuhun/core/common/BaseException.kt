@@ -33,3 +33,12 @@ class UnknownException(message: String = "") :
 class NetworkException(message: String = "") : BaseException(
     message.ifEmpty { "Please check your internet connection." }
 )
+
+class ApplicationNotInstalledException(message: String = "") :
+    BaseException(message.ifEmpty { "The application is not installed on this device." })
+
+class ApplicationLaunchException(message: String = "") :
+    BaseException(message.ifEmpty { "Failed to launch the application." })
+
+class ApplicationSecurityException(message: String = "") :
+    BaseException(message.ifEmpty { "A security exception occurred while launching the application." })

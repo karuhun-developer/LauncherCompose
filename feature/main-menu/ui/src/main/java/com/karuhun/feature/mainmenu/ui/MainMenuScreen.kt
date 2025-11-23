@@ -17,6 +17,7 @@
 package com.karuhun.feature.mainmenu.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +34,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,17 +51,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.tv.material3.Text
 import coil.compose.AsyncImage
-import com.karuhun.core.common.orZero
 import com.karuhun.core.model.Application
 import com.karuhun.core.model.Content
-import com.karuhun.core.model.ContentItem
+import com.karuhun.core.ui.navigation.extension.collectWithLifecycle
 import com.karuhun.launcher.core.designsystem.component.LauncherCard
 import com.karuhun.launcher.core.designsystem.component.MenuItemCard
-import com.karuhun.launcher.core.designsystem.icon.AmazonPrimeVideoSvgrepoCom
 import com.karuhun.launcher.core.designsystem.icon.HotelProfile
 import com.karuhun.launcher.core.designsystem.theme.AppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainMenuScreen(
@@ -69,123 +73,141 @@ fun MainMenuScreen(
 ) {
 
     val gridState = rememberLazyGridState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = modifier
-            .padding(8.dp),
-    ) {
-        LazyHorizontalGrid(
-            modifier = Modifier
-                .height(180.dp),
-            rows = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalArrangement = Arrangement.spacedBy(0.dp),
+    uiEffect.collectWithLifecycle { effect ->
+        when (effect) {
+            is MainMenuContract.UiEffect.ShowError -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
+            }
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.padding(8.dp),
         ) {
-            item(
-                span = {
-                    GridItemSpan(maxLineSpan)
-                },
+            LazyHorizontalGrid(
+                modifier = Modifier
+                    .height(180.dp),
+                rows = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(0.dp),
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
             ) {
-                MenuItemCard(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .padding(8.dp),
-                    icon = HotelProfile,
-                    onClick = {},
-                    title = "Hotel Profile",
-                )
-            }
-            item(
-                span = {
-                    GridItemSpan(maxLineSpan)
-                },
-            ) {
-                MenuItemCard(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .padding(8.dp),
-                    icon = Icons.Default.RestaurantMenu,
-                    onClick = { onNavigateToRestaurant() },
-                    title = "Restaurant",
-                )
-            }
-            items(uiState.applications, key = { it.id!! }) { application ->
-                LauncherCard(
-                    modifier = Modifier
-                        .width(250.dp)
-                        .padding(8.dp),
-                    onClick = { uiAction(MainMenuContract.UiAction.OnApplicationClicked(application)) },
+                item(
+                    span = {
+                        GridItemSpan(maxLineSpan)
+                    },
                 ) {
-                    Row(
+                    MenuItemCard(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .width(200.dp)
                             .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.size(64.dp),
-                            model = application.image,
-                            contentDescription = application.name.orEmpty(),
-                            colorFilter = if (application.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
-                        )
-                        Text(
-                            text = application.name.orEmpty(),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
+                        icon = HotelProfile,
+                        onClick = {},
+                        title = "Hotel Profile",
+                    )
                 }
-            }
-        }
-        LazyHorizontalGrid(
-            state = gridState,
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalArrangement = Arrangement.spacedBy(0.dp),
-            rows = GridCells.Fixed(2),
-        ) {
-            items(
-                items = uiState.contents,
-                key = { it.id!! },
-            ) { content ->
-                LauncherCard(
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(90.dp)
-                        .padding(8.dp),
-                    onClick = { onNavigateToContentItems(content) },
+                item(
+                    span = {
+                        GridItemSpan(maxLineSpan)
+                    },
                 ) {
-                    Row(
+                    MenuItemCard(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            .width(200.dp)
+                            .padding(8.dp),
+                        icon = Icons.Default.RestaurantMenu,
+                        onClick = { onNavigateToRestaurant() },
+                        title = "Restaurant",
+                    )
+                }
+                items(uiState.applications, key = { it.id!! }) { application ->
+                    LauncherCard(
+                        modifier = Modifier
+                            .width(250.dp)
+                            .padding(8.dp),
+                        onClick = { uiAction(MainMenuContract.UiAction.OnApplicationClicked(application)) },
                     ) {
-                        AsyncImage(
-                            modifier = Modifier.size(56.dp),
-                            model = content.image.orEmpty(),
-                            contentDescription = null,
-                            colorFilter = if (content.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
-                        )
-                        Text(
-                            text = content.title.orEmpty(),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier.size(64.dp),
+                                model = application.image,
+                                contentDescription = application.name.orEmpty(),
+                                colorFilter = if (application.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
+                            )
+                            Text(
+                                text = application.name.orEmpty(),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }
+            LazyHorizontalGrid(
+                state = gridState,
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(0.dp),
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                rows = GridCells.Fixed(2),
+            ) {
+                items(
+                    items = uiState.contents,
+                    key = { it.id!! },
+                ) { content ->
+                    LauncherCard(
+                        modifier = Modifier
+                            .width(250.dp)
+                            .height(90.dp)
+                            .padding(8.dp),
+                        onClick = { onNavigateToContentItems(content) },
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier.size(56.dp),
+                                model = content.image.orEmpty(),
+                                contentDescription = null,
+                                colorFilter = if (content.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
+                            )
+                            Text(
+                                text = content.title.orEmpty(),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
+                }
+            }
+
         }
 
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

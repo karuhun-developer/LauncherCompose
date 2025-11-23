@@ -43,8 +43,8 @@ data class GetContentItemsResponse(
 	@field:SerializedName("id")
 	val id: Int? = null,
 
-	@field:SerializedName("feature_category_id")
-	val featureCategoryId: Int? = null
+	@field:SerializedName("content_id")
+	val contentId: Int? = null
 )
 
 fun GetContentItemsResponse.toDomainModel() = ContentItem(
@@ -52,7 +52,7 @@ fun GetContentItemsResponse.toDomainModel() = ContentItem(
     name = name.orEmpty(),
     image = image?.toString().orEmpty(),
     description = description.orEmpty(),
-    contentId = featureCategoryId.orZero()
+    contentId = contentId.orZero()
 )
 
 fun List<GetContentItemsResponse>?.toDomainList() = this.orEmpty().map { it.toDomainModel() }

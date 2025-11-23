@@ -21,5 +21,5 @@ data class ContentItem(
     val name: String?,
     val image: String?,
     val description: String?,
-    val contentId: Int?
+    val contentId: Int
 )

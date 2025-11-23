@@ -18,6 +18,7 @@ package com.karuhun.feature.mainmenu.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.karuhun.core.common.fold
 import com.karuhun.core.domain.usecase.GetApplicationsUseCase
 import com.karuhun.core.domain.usecase.GetContentsUseCase
 import com.karuhun.core.domain.usecase.LaunchApplicationUseCase
@@ -44,13 +45,26 @@ class MainMenuViewModel @Inject constructor(
 
     override fun onAction(action: MainMenuContract.UiAction) {
         when (action) {
-            MainMenuContract.UiAction.LoadContents -> { loadContents() }
-            MainMenuContract.UiAction.OnMenuItemClick -> {}
-            MainMenuContract.UiAction.LoadApplications -> { loadApplications() }
+            is MainMenuContract.UiAction.LoadContents -> { loadContents() }
+            is MainMenuContract.UiAction.OnMenuItemClick -> {}
+            is MainMenuContract.UiAction.LoadApplications -> { loadApplications() }
             is MainMenuContract.UiAction.OnApplicationClicked -> {
-                action.application.packageName?.let { launchApplicationUseCase(it) }
+                onApplicationClicked(action.application.packageName.orEmpty())
             }
         }
+    }
+
+    private fun onApplicationClicked(packageName: String) = viewModelScope.launch {
+        launchApplicationUseCase(packageName).fold(
+            onSuccess = {
+
+            },
+            onError = { error ->
+                emitUiEffect(
+                    MainMenuContract.UiEffect.ShowError(error.message ?: "Unknown Error")
+                )
+            }
+        )
     }
 
     private fun loadContents() = viewModelScope.launch {
