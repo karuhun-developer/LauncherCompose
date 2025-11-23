@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.karuhun.core.data
+package com.karuhun.core.common.util
 
 import android.util.Log
-import com.karuhun.core.datastore.ChangeListVersions
-import com.karuhun.core.network.model.NetworkChangeList
+import com.karuhun.core.model.ChangeListVersions
+import com.karuhun.core.model.NetworkChangeList
 import kotlin.coroutines.cancellation.CancellationException
 
 interface Synchronizer {

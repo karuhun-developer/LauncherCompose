@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.karuhun.core.domain.usecase.GetApplicationsUseCase
 import com.karuhun.core.domain.usecase.GetContentsUseCase
+import com.karuhun.core.domain.usecase.LaunchApplicationUseCase
 import com.karuhun.core.ui.navigation.delegate.mvi.MVI
 import com.karuhun.core.ui.navigation.delegate.mvi.mvi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,7 @@ import javax.inject.Inject
 class MainMenuViewModel @Inject constructor(
     private val getContentsUseCase: GetContentsUseCase,
     private val getApplicationsUseCase: GetApplicationsUseCase,
+    private val launchApplicationUseCase: LaunchApplicationUseCase,
 ) : ViewModel(),
     MVI<MainMenuContract.UiState, MainMenuContract.UiAction, MainMenuContract.UiEffect> by mvi(
         initialState = MainMenuContract.UiState(),
@@ -45,6 +47,9 @@ class MainMenuViewModel @Inject constructor(
             MainMenuContract.UiAction.LoadContents -> { loadContents() }
             MainMenuContract.UiAction.OnMenuItemClick -> {}
             MainMenuContract.UiAction.LoadApplications -> { loadApplications() }
+            is MainMenuContract.UiAction.OnApplicationClicked -> {
+                action.application.packageName?.let { launchApplicationUseCase(it) }
+            }
         }
     }
 

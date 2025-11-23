@@ -29,6 +29,7 @@ object MainMenuContract {
     )
 
     sealed interface UiAction {
+        data class OnApplicationClicked(val application: Application) : UiAction
         data object OnMenuItemClick : UiAction
         data object LoadContents : UiAction
         data object LoadApplications : UiAction

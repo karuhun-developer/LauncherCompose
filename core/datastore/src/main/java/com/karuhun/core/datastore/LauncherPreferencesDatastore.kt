@@ -19,6 +19,7 @@ package com.karuhun.core.datastore
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
+import com.karuhun.core.model.ChangeListVersions
 import com.karuhun.core.model.VersionData
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map

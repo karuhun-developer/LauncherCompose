@@ -19,7 +19,7 @@ package com.karuhun.feature.restaurant.data.source.remote
 import com.karuhun.core.datastore.LauncherPreferencesDatastore
 import com.karuhun.core.model.Food
 import com.karuhun.core.model.FoodCategory
-import com.karuhun.core.network.model.NetworkChangeList
+import com.karuhun.core.model.NetworkChangeList
 import com.karuhun.feature.restaurant.data.source.RestaurantApiService
 import com.karuhun.feature.restaurant.data.source.remote.response.toDomainList
 import kotlinx.coroutines.CoroutineDispatcher

@@ -16,14 +16,14 @@
 
 package com.karuhun.feature.content.data.repository
 
-import com.karuhun.core.data.Synchronizer
-import com.karuhun.core.data.changeListSync
+import com.karuhun.core.common.util.Synchronizer
+import com.karuhun.core.common.util.changeListSync
 import com.karuhun.core.database.dao.ApplicationDao
 import com.karuhun.core.database.model.toDomainList
 import com.karuhun.core.database.model.toEntityList
-import com.karuhun.core.datastore.ChangeListVersions
 import com.karuhun.core.domain.repository.ApplicationRepository
 import com.karuhun.core.model.Application
+import com.karuhun.core.model.ChangeListVersions
 import com.karuhun.feature.content.data.source.remote.ApplicationNetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

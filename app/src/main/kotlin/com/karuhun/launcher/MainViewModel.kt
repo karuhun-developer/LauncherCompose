@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.karuhun.core.common.onFailure
 import com.karuhun.core.common.onSuccess
-import com.karuhun.core.data.util.SyncManager
+import com.karuhun.core.common.util.SyncManager
 import com.karuhun.core.domain.usecase.GetHotelProfileUseCase
 import com.karuhun.core.domain.usecase.GetRoomDetailUseCase
 import com.karuhun.core.domain.usecase.GetWeatherUseCase

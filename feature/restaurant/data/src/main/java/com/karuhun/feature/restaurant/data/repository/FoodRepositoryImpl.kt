@@ -16,20 +16,18 @@
 
 package com.karuhun.feature.restaurant.data.repository
 
-import com.karuhun.core.data.Synchronizer
-import com.karuhun.core.data.changeListSync
-import com.karuhun.core.data.syncData
+import com.karuhun.core.common.util.Synchronizer
+import com.karuhun.core.common.util.changeListSync
 import com.karuhun.core.database.dao.FoodDao
 import com.karuhun.core.database.model.toDomainList
 import com.karuhun.core.database.model.toEntityList
-import com.karuhun.core.datastore.ChangeListVersions
+import com.karuhun.core.model.ChangeListVersions
 import com.karuhun.core.datastore.LauncherPreferencesDatastore
 import com.karuhun.core.domain.repository.FoodRepository
 import com.karuhun.core.model.Food
 import com.karuhun.feature.restaurant.data.source.RestaurantApiService
 import com.karuhun.feature.restaurant.data.source.remote.RestaurantNetworkDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

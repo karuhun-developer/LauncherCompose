@@ -16,24 +16,17 @@
 
 package com.karuhun.feature.content.data.repository
 
-import android.util.Log
-import com.karuhun.core.common.Resource
-import com.karuhun.core.data.Synchronizer
-import com.karuhun.core.data.changeListSync
+import com.karuhun.core.common.util.Synchronizer
+import com.karuhun.core.common.util.changeListSync
 import com.karuhun.core.database.dao.ContentDao
 import com.karuhun.core.database.dao.ContentItemDao
-import com.karuhun.core.database.model.toDomainModel
 import com.karuhun.core.database.model.toEntity
 import com.karuhun.core.database.model.toModel
-import com.karuhun.core.datastore.ChangeListVersions
 import com.karuhun.core.domain.repository.ContentRepository
+import com.karuhun.core.model.ChangeListVersions
 import com.karuhun.core.model.Content
-import com.karuhun.core.model.ContentItem
-import com.karuhun.core.network.safeApiCall
 import com.karuhun.feature.content.data.source.ContentApiService
 import com.karuhun.feature.content.data.source.remote.ContentNetworkDataSource
-import com.karuhun.feature.content.data.source.remote.response.toDomain
-import com.karuhun.feature.content.data.source.remote.response.toDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

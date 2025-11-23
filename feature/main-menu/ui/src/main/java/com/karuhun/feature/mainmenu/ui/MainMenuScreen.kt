@@ -109,12 +109,12 @@ fun MainMenuScreen(
                     title = "Restaurant",
                 )
             }
-            items(uiState.applications, key = { it.id!! }) {
+            items(uiState.applications, key = { it.id!! }) { application ->
                 LauncherCard(
                     modifier = Modifier
                         .width(250.dp)
                         .padding(8.dp),
-                    onClick = {},
+                    onClick = { uiAction(MainMenuContract.UiAction.OnApplicationClicked(application)) },
                 ) {
                     Row(
                         modifier = Modifier
@@ -125,12 +125,12 @@ fun MainMenuScreen(
                     ) {
                         AsyncImage(
                             modifier = Modifier.size(64.dp),
-                            model = "https://upload.wikimedia.org/wikipedia/commons/1/1e/Disney%2B_Hotstar_logo.svg",
-                            contentDescription = it.name.orEmpty(),
-                            colorFilter = if (it.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
+                            model = application.image,
+                            contentDescription = application.name.orEmpty(),
+                            colorFilter = if (application.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
                         )
                         Text(
-                            text = it.name.orEmpty(),
+                            text = application.name.orEmpty(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 2,
@@ -152,13 +152,13 @@ fun MainMenuScreen(
             items(
                 items = uiState.contents,
                 key = { it.id!! },
-            ) {
+            ) { content ->
                 LauncherCard(
                     modifier = Modifier
                         .width(250.dp)
                         .height(90.dp)
                         .padding(8.dp),
-                    onClick = { onNavigateToContentItems(it) },
+                    onClick = { onNavigateToContentItems(content) },
                 ) {
                     Row(
                         modifier = Modifier
@@ -169,12 +169,12 @@ fun MainMenuScreen(
                     ) {
                         AsyncImage(
                             modifier = Modifier.size(56.dp),
-                            model = it.image.orEmpty(),
+                            model = content.image.orEmpty(),
                             contentDescription = null,
-                            colorFilter = if (it.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
+                            colorFilter = if (content.image.isNullOrEmpty()) null else ColorFilter.tint(Color(0xFFEFEFEF))
                         )
                         Text(
-                            text = it.title.orEmpty(),
+                            text = content.title.orEmpty(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 2,

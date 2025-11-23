@@ -6,8 +6,8 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Keep ChangeListVersions and property references for sync operations
--keep class com.karuhun.core.datastore.ChangeListVersions { *; }
--keepclassmembers class com.karuhun.core.datastore.ChangeListVersions {
+-keep class com.karuhun.core.model.ChangeListVersions { *; }
+-keepclassmembers class com.karuhun.core.model.ChangeListVersions {
     *;
 }
 
@@ -31,13 +31,13 @@
 }
 
 # Keep network change list models
--keep class com.karuhun.core.network.model.NetworkChangeList { *; }
--keepclassmembers class com.karuhun.core.network.model.NetworkChangeList {
+-keep class com.karuhun.core.model.NetworkChangeList { *; }
+-keepclassmembers class com.karuhun.core.model.NetworkChangeList {
     *;
 }
 
 # Keep extension functions on ChangeListVersions
--keepclassmembers class com.karuhun.core.datastore.ChangeListVersions {
+-keepclassmembers class com.karuhun.core.model.ChangeListVersions {
     *** copy(...);
 }
 

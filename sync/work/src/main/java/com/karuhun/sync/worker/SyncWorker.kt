@@ -23,8 +23,7 @@ import androidx.tracing.traceAsync
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import com.karuhun.core.data.Synchronizer
-import com.karuhun.core.datastore.ChangeListVersions
+import com.karuhun.core.common.util.Synchronizer
 import com.karuhun.core.datastore.LauncherPreferencesDatastore
 import com.karuhun.core.domain.repository.ApplicationRepository
 import com.karuhun.core.domain.repository.ContentItemsRepository
@@ -32,6 +31,7 @@ import com.karuhun.core.domain.repository.ContentRepository
 import com.karuhun.core.domain.repository.FoodCategoryRepository
 import com.karuhun.core.domain.repository.FoodRepository
 import com.karuhun.core.domain.repository.HotelRepository
+import com.karuhun.core.model.ChangeListVersions
 import com.karuhun.sync.initializer.SyncConstraints
 import com.karuhun.sync.status.SyncSubscriber
 import dagger.assisted.Assisted
@@ -39,7 +39,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 @HiltWorker

@@ -1,4 +1,4 @@
-package com.karuhun.core.data.util
+package com.karuhun.core.common.util
 
 import kotlinx.coroutines.flow.Flow
 

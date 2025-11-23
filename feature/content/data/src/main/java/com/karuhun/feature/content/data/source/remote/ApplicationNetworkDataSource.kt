@@ -17,7 +17,7 @@
 package com.karuhun.feature.content.data.source.remote
 
 import com.karuhun.core.model.Application
-import com.karuhun.core.network.model.NetworkChangeList
+import com.karuhun.core.model.NetworkChangeList
 import com.karuhun.feature.content.data.source.ApplicationApiService
 import com.karuhun.feature.content.data.source.remote.response.toDomainList
 import kotlinx.coroutines.CoroutineDispatcher

@@ -18,7 +18,7 @@ package com.karuhun.feature.restaurant.data.source
 
 import com.karuhun.core.network.model.BasePaginationResponse
 import com.karuhun.core.network.model.BaseResponse
-import com.karuhun.core.network.model.NetworkChangeList
+import com.karuhun.core.model.NetworkChangeList
 import com.karuhun.feature.restaurant.data.source.remote.response.GetCategoryResponse
 import com.karuhun.feature.restaurant.data.source.remote.response.GetFoodsResponse
 import retrofit2.http.GET

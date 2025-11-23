@@ -16,7 +16,7 @@
 
 package com.karuhun.sync.di
 
-import com.karuhun.core.data.util.SyncManager
+import com.karuhun.core.common.util.SyncManager
 import com.karuhun.sync.status.StubSyncSubscriber
 import com.karuhun.sync.status.SyncSubscriber
 import com.karuhun.sync.status.WorkManagerSyncManager
