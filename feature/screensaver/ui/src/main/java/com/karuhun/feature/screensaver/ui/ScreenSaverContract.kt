@@ -18,6 +18,7 @@ package com.karuhun.feature.screensaver.ui
 
 import com.karuhun.core.datastore.HotelProfile
 import com.karuhun.core.model.Hotel
+import com.karuhun.feature.screensaver.ui.cache.VideoCacheManager
 import com.karuhun.feature.screensaver.ui.model.VideoConfig
 
 object ScreenSaverContract {
@@ -26,7 +27,9 @@ object ScreenSaverContract {
         val hotelProfile: HotelProfile? = HotelProfile.Empty,
         val videoConfig: VideoConfig? = null,
         val isVideoPlaying: Boolean = true,
-        val errorMessage: String? = null
+        val errorMessage: String? = null,
+        val videoCacheManager: VideoCacheManager? = null,
+        val isCached: Boolean = false,
     )
     sealed interface UiAction {
         object LoadScreenSaver : UiAction

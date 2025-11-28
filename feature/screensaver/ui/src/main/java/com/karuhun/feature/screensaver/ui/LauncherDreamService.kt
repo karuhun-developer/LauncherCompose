@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -38,16 +37,34 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
+import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.EntryPointAccessors
 import androidx.tv.material3.Text
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+interface ScreenSaverViewModelFactoryProvider {
+    fun getScreenSaverViewModel(): ScreenSaverViewModel
+}
+
+@dagger.hilt.InstallIn(dagger.hilt.components.SingletonComponent::class)
+@dagger.hilt.EntryPoint
+interface ScreenSaverViewModelEntryPoint {
+    fun screenSaverViewModel(): ScreenSaverViewModel
+}
+
 @AndroidEntryPoint
-class LauncherDreamService : DreamService(), LifecycleOwner, SavedStateRegistryOwner {
-    @Inject
-    lateinit var viewModel: ScreenSaverViewModel
+class LauncherDreamService : DreamService(), LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner {
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
+    private val store = ViewModelStore()
+    
+    private val viewModel: ScreenSaverViewModel by lazy {
+        EntryPointAccessors.fromApplication(
+            applicationContext,
+            ScreenSaverViewModelEntryPoint::class.java
+        ).screenSaverViewModel()
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -61,7 +78,7 @@ class LauncherDreamService : DreamService(), LifecycleOwner, SavedStateRegistryO
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setViewTreeLifecycleOwner(this@LauncherDreamService)
             setViewTreeSavedStateRegistryOwner(this@LauncherDreamService)
-//            setViewTreeViewModelStoreOwner(this@LauncherDreamService)
+            setViewTreeViewModelStoreOwner(this@LauncherDreamService)
             setContent {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 val uiEffect = viewModel.uiEffect
@@ -89,8 +106,12 @@ class LauncherDreamService : DreamService(), LifecycleOwner, SavedStateRegistryO
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
 
+    override val viewModelStore: ViewModelStore
+        get() = store
+
     override fun onDetachedFromWindow() {
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        store.clear()
         super.onDetachedFromWindow()
     }
 }

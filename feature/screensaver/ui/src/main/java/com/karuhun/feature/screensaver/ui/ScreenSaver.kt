@@ -95,7 +95,8 @@ fun ScreenSaver(
             VideoPlayer(
                 modifier = Modifier
                     .fillMaxSize(),
-                videoUri = uiState.hotelProfile?.introVideo.orEmpty(),
+                videoUri = videoConfig.uri,
+                videoCacheManager = uiState.videoCacheManager,
                 isPlaying = uiState.isVideoPlaying,
                 isMuted = videoConfig.isMuted,
                 onError = { errorMessage ->

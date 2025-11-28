@@ -31,12 +31,15 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.karuhun.feature.screensaver.ui.cache.VideoCacheManager
+import android.util.Log
 
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer(
     modifier: Modifier = Modifier,
     videoUri: String,
+    videoCacheManager: VideoCacheManager? = null,
     isPlaying: Boolean = true,
     isMuted: Boolean = false,
     onPlayerReady: (ExoPlayer) -> Unit = {},
@@ -44,9 +47,12 @@ fun VideoPlayer(
 ) {
     val context = LocalContext.current
 
-    val exoPlayer = remember {
+    Log.d("VideoPlayer", "VideoPlayer composing with uri: $videoUri, isPlaying: $isPlaying")
+
+    val exoPlayer = remember(videoCacheManager) {
         createExoPlayer(
             context = context,
+            videoCacheManager = videoCacheManager,
             onError = onError,
         )
     }
@@ -54,17 +60,23 @@ fun VideoPlayer(
     LaunchedEffect(videoUri) {
         if (videoUri.isNotEmpty()) {
             try {
+                Log.d("VideoPlayer", "Loading video: $videoUri")
                 val mediaItem = MediaItem.fromUri(videoUri)
                 exoPlayer.setMediaItem(mediaItem)
                 exoPlayer.prepare()
+                Log.d("VideoPlayer", "Video prepared successfully")
                 onPlayerReady(exoPlayer)
             } catch (e: Exception) {
+                Log.e("VideoPlayer", "Failed to load video", e)
                 onError("Failed to load video: ${e.message}")
             }
+        } else {
+            Log.w("VideoPlayer", "Empty video URI")
         }
     }
 
     LaunchedEffect(isPlaying) {
+        Log.d("VideoPlayer", "isPlaying changed to: $isPlaying")
         if (isPlaying) {
             exoPlayer.play()
         } else {
@@ -79,6 +91,7 @@ fun VideoPlayer(
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
+            Log.d("VideoPlayer", "Creating PlayerView")
             PlayerView(context).apply {
                 player = exoPlayer
                 useController = false // Hide controls for screensaver
@@ -96,19 +109,45 @@ fun VideoPlayer(
 
 private fun createExoPlayer(
     context: Context,
+    videoCacheManager: VideoCacheManager?,
     onError: (String) -> Unit,
 ): ExoPlayer {
+    Log.d("VideoPlayer", "Creating ExoPlayer, cache enabled: ${videoCacheManager != null}")
     return ExoPlayer.Builder(context)
+        .apply {
+            if (videoCacheManager != null) {
+                Log.d("VideoPlayer", "Setting up cache data source")
+                setMediaSourceFactory(
+                    androidx.media3.exoplayer.source.DefaultMediaSourceFactory(
+                        videoCacheManager.createCacheDataSourceFactory()
+                    )
+                )
+            }
+        }
         .build()
         .apply {
             repeatMode = Player.REPEAT_MODE_ALL
             playWhenReady = true
+            Log.d("VideoPlayer", "ExoPlayer created, repeatMode: $repeatMode, playWhenReady: $playWhenReady")
 
             addListener(
                 object : Player.Listener {
                     override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
                         super.onPlayerError(error)
+                        Log.e("VideoPlayer", "Player error: ${error.message}", error)
                         onError("Playback error: ${error.message}")
+                    }
+                    
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        super.onPlaybackStateChanged(playbackState)
+                        val state = when (playbackState) {
+                            Player.STATE_IDLE -> "IDLE"
+                            Player.STATE_BUFFERING -> "BUFFERING"
+                            Player.STATE_READY -> "READY"
+                            Player.STATE_ENDED -> "ENDED"
+                            else -> "UNKNOWN"
+                        }
+                        Log.d("VideoPlayer", "Playback state changed: $state")
                     }
                 },
             )
