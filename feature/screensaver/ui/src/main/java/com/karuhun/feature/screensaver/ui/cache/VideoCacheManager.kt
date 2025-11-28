@@ -20,13 +20,11 @@ import android.content.Context
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -54,7 +52,7 @@ class VideoCacheManager @Inject constructor(
         StandaloneDatabaseProvider(context)
     }
 
-    private val cache: Cache by lazy {
+    val cache: Cache by lazy {
         SimpleCache(
             cacheDir,
             LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE),
@@ -62,29 +60,26 @@ class VideoCacheManager @Inject constructor(
         )
     }
 
-    fun createCacheDataSourceFactory(): DataSource.Factory {
-        val upstreamFactory = DefaultHttpDataSource.Factory()
+    fun buildMediaSourceFactory(context: Context): DefaultMediaSourceFactory {
+        val httpDataSourceFactory = androidx.media3.datasource.DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
-            .setConnectTimeoutMs(30000)
-            .setReadTimeoutMs(30000)
-
-        return CacheDataSource.Factory()
+            .setConnectTimeoutMs(60_000) // 60 seconds
+            .setReadTimeoutMs(60_000) // 60 seconds
+        
+        val cacheDataSourceFactory = CacheDataSource.Factory()
             .setCache(cache)
-            .setUpstreamDataSourceFactory(upstreamFactory)
-            .setCacheWriteDataSinkFactory(null) // Use default
+            .setUpstreamDataSourceFactory(httpDataSourceFactory)
             .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-    }
 
-    fun getCachedBytes(uri: String): Long {
-        return try {
-            cache.getCachedBytes(uri, 0, Long.MAX_VALUE)
-        } catch (e: Exception) {
-            0L
-        }
+        return DefaultMediaSourceFactory(cacheDataSourceFactory)
     }
 
     fun isCached(uri: String): Boolean {
-        return getCachedBytes(uri) > 0
+        return try {
+            cache.getCachedBytes(uri, 0, Long.MAX_VALUE) > 0
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun clearCache() {

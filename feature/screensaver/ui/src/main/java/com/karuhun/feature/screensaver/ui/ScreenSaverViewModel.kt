@@ -32,17 +32,17 @@ class ScreenSaverViewModel @Inject constructor(
     private val getHotelProfileUseCase: GetHotelProfileUseCase,
     private val videoCacheManager: VideoCacheManager
 ) : ViewModel(), MVI<ScreenSaverContract.UiState, ScreenSaverContract.UiAction, ScreenSaverContract.UiEffect> by mvi(
-    initialState = ScreenSaverContract.UiState()
+    initialState = ScreenSaverContract.UiState(
+        videoCacheManager = videoCacheManager
+    )
 ) {
     init {
-        updateUiState { copy(videoCacheManager = videoCacheManager) }
         onAction(ScreenSaverContract.UiAction.LoadScreenSaver)
     }
 
     override fun onAction(action: ScreenSaverContract.UiAction) {
         when (action) {
             ScreenSaverContract.UiAction.LoadScreenSaver -> {
-                setupDefaultVideo()
                 getHotelProfile()
             }
             ScreenSaverContract.UiAction.PlayVideo -> {
@@ -53,6 +53,12 @@ class ScreenSaverViewModel @Inject constructor(
             }
             is ScreenSaverContract.UiAction.OnVideoError -> {
                 updateUiState { copy(errorMessage = action.message) }
+            }
+            is ScreenSaverContract.UiAction.PreCacheVideo -> {
+                // Pre-caching handled automatically by CacheDataSource
+            }
+            is ScreenSaverContract.UiAction.OnBufferingStateChanged -> {
+                updateUiState { copy(isBuffering = action.isBuffering) }
             }
         }
     }

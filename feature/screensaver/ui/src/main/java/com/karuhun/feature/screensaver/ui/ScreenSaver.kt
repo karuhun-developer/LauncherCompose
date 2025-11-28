@@ -95,12 +95,15 @@ fun ScreenSaver(
             VideoPlayer(
                 modifier = Modifier
                     .fillMaxSize(),
-                videoUri = videoConfig.uri,
+                videoUri = uiState.videoConfig.uri,
                 videoCacheManager = uiState.videoCacheManager,
                 isPlaying = uiState.isVideoPlaying,
                 isMuted = videoConfig.isMuted,
                 onError = { errorMessage ->
                     onAction(ScreenSaverContract.UiAction.OnVideoError(errorMessage))
+                },
+                onBufferingChanged = { isBuffering ->
+                    onAction(ScreenSaverContract.UiAction.OnBufferingStateChanged(isBuffering))
                 },
             )
         }
@@ -195,10 +198,12 @@ fun ScreenSaver(
             }
         }
 
-        // Loading Indicator
-        if (uiState.isLoading) {
+        // Loading/Buffering Indicator - Below Welcome Box
+        if (uiState.isLoading || uiState.isBuffering) {
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(top = 320.dp), // Position below the welcome box (250dp height + 70dp spacing)
                 color = Color.White,
             )
         }

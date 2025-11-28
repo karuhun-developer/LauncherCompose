@@ -44,6 +44,7 @@ fun VideoPlayer(
     isMuted: Boolean = false,
     onPlayerReady: (ExoPlayer) -> Unit = {},
     onError: (String) -> Unit = {},
+    onBufferingChanged: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -54,6 +55,7 @@ fun VideoPlayer(
             context = context,
             videoCacheManager = videoCacheManager,
             onError = onError,
+            onBufferingChanged = onBufferingChanged,
         )
     }
 
@@ -111,17 +113,14 @@ private fun createExoPlayer(
     context: Context,
     videoCacheManager: VideoCacheManager?,
     onError: (String) -> Unit,
+    onBufferingChanged: (Boolean) -> Unit,
 ): ExoPlayer {
     Log.d("VideoPlayer", "Creating ExoPlayer, cache enabled: ${videoCacheManager != null}")
     return ExoPlayer.Builder(context)
         .apply {
             if (videoCacheManager != null) {
-                Log.d("VideoPlayer", "Setting up cache data source")
-                setMediaSourceFactory(
-                    androidx.media3.exoplayer.source.DefaultMediaSourceFactory(
-                        videoCacheManager.createCacheDataSourceFactory()
-                    )
-                )
+                Log.d("VideoPlayer", "Setting up cache with MediaSourceFactory")
+                setMediaSourceFactory(videoCacheManager.buildMediaSourceFactory(context))
             }
         }
         .build()
@@ -148,6 +147,17 @@ private fun createExoPlayer(
                             else -> "UNKNOWN"
                         }
                         Log.d("VideoPlayer", "Playback state changed: $state")
+                        
+                        // Update buffering state
+                        onBufferingChanged(playbackState == Player.STATE_BUFFERING)
+                    }
+                    
+                    override fun onIsLoadingChanged(isLoading: Boolean) {
+                        super.onIsLoadingChanged(isLoading)
+                        Log.d("VideoPlayer", "Loading state changed: $isLoading")
+                        if (isLoading) {
+                            // Notify buffering started
+                        }
                     }
                 },
             )

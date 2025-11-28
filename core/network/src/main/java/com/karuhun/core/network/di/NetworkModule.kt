@@ -58,18 +58,18 @@ internal object NetworkModule {
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
 
-        if(BuildConfig.DEBUG) {
-            val proxy = Proxy(
-                Proxy.Type.HTTP,
-                InetSocketAddress(BuildConfig.PROXY_IP, BuildConfig.PROXY_PORT.toInt())
-            )
-            okHttpClient.proxy(proxy)
-
-            val trustManager = createInsecureTrustManager()
-            val sslSocketFactory = createInsecureSslSocketFactory(trustManager)
-            okHttpClient.sslSocketFactory(sslSocketFactory, trustManager)
-            okHttpClient.hostnameVerifier(HostnameVerifier { _, _ -> true })
-        }
+//        if(BuildConfig.DEBUG) {
+//            val proxy = Proxy(
+//                Proxy.Type.HTTP,
+//                InetSocketAddress(BuildConfig.PROXY_IP, BuildConfig.PROXY_PORT.toInt())
+//            )
+//            okHttpClient.proxy(proxy)
+//
+//            val trustManager = createInsecureTrustManager()
+//            val sslSocketFactory = createInsecureSslSocketFactory(trustManager)
+//            okHttpClient.sslSocketFactory(sslSocketFactory, trustManager)
+//            okHttpClient.hostnameVerifier(HostnameVerifier { _, _ -> true })
+//        }
         return okHttpClient.build()
     }
 
