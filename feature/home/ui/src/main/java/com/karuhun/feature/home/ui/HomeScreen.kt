@@ -83,13 +83,15 @@ internal fun HomeScreen(
         LeftContent(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(start = 16.dp),
             guestName = uiState.roomDetail?.guestName.orEmpty()
         )
         RightContent(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(end = 16.dp),
             onMenuItemClick = onMenuItemClick,
             onGoToMainMenu = onGoToMainMenu,
         )

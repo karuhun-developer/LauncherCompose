@@ -15,4 +15,5 @@ dependencies {
     implementation(projects.feature.content.ui)
     implementation(projects.feature.screensaver.ui)
     implementation(projects.feature.restaurant.ui)
+    api(projects.feature.onboarding.presentation)
 }

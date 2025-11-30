@@ -27,6 +27,8 @@ import com.karuhun.feature.itemlist.ui.navigation.ContentDetail
 import com.karuhun.feature.itemlist.ui.navigation.ContentItems
 import com.karuhun.feature.mainmenu.ui.navigation.MainMenu
 import com.karuhun.feature.mainmenu.ui.navigation.mainMenuScreen
+import com.karuhun.feature.onboarding.presentation.navigation.OnBoarding
+import com.karuhun.feature.onboarding.presentation.navigation.onboardingGraph
 import com.karuhun.feature.restaurant.ui.navigation.RestaurantCategory
 import com.karuhun.feature.restaurant.ui.navigation.restaurantGraph
 
@@ -38,8 +40,19 @@ fun LauncherAppNavGraph(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Home,
+        startDestination = OnBoarding,
     ) {
+        onboardingGraph(
+            onNavigateToHome = {
+                navController.apply {
+                    navigate(Home) {
+                        popUpTo(graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        )
         homeScreen(
             onMenuItemClick = { menuItem ->
 

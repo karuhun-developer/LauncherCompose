@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,11 +52,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import com.karuhun.core.common.util.DeviceUtil
 import com.karuhun.core.ui.navigation.extension.collectWithLifecycle
+import com.karuhun.feature.onboarding.presentation.navigation.OnBoarding
 import com.karuhun.launcher.core.designsystem.component.RunningText
 import com.karuhun.launcher.core.designsystem.component.TopBar
 import com.karuhun.launcher.core.designsystem.theme.AppTheme
@@ -120,6 +124,11 @@ fun LauncherApplication(
     onAction: (MainContract.UiAction) -> Unit,
     onMenuItemClick: (String) -> Unit,
 ) {
+    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val isOnboardingRoute = currentRoute?.contains(OnBoarding.javaClass.simpleName) == true
+    Log.d("TAG", "LauncherApplication - Current Route: $currentRoute, isOnboarding: $isOnboardingRoute")
+
     Box(
         modifier = modifier,
     ) {
@@ -142,27 +151,26 @@ fun LauncherApplication(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(
-                        top = 24.dp,
-                        bottom = 48.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                    ),
         ) {
-            TopBar(
-                modifier = Modifier
-                    .height(80.dp),
-                roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
-                date = "06 April 2020",
-                temperature = "${uiState.weather?.temp?.toInt()}°C",
-                imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
-                weatherText = uiState.weather?.icon.orEmpty()
-            )
+            AnimatedVisibility(
+                visible = !isOnboardingRoute,
+            ) {
+                TopBar(
+                    modifier = Modifier
+                        .height(80.dp),
+                    roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
+                    date = "06 April 2020",
+                    temperature = "${uiState.weather?.temp?.toInt()}°C",
+                    imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
+                    weatherText = uiState.weather?.icon.orEmpty()
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .weight(1f)
                     .padding(
-                        bottom = 12.dp,
+                        bottom = 0.dp,
                     ),
             ) {
                 LauncherAppNavGraph(
@@ -172,14 +180,20 @@ fun LauncherApplication(
                 )
             }
 
+            AnimatedVisibility(
+                visible = !isOnboardingRoute
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
+                RunningText(
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .fillMaxWidth(),
+                    text = uiState.hotelProfile?.runningText.orEmpty(),
+                )
+            }
+
         }
-        RunningText(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 4.dp)
-                .fillMaxWidth(),
-            text = uiState.hotelProfile?.runningText.orEmpty(),
-        )
+
     }
 }
 
