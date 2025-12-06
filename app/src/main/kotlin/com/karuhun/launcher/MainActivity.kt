@@ -17,14 +17,9 @@
 package com.karuhun.launcher
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,36 +28,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices.TV_1080p
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import com.karuhun.core.common.util.DeviceUtil
-import com.karuhun.core.ui.navigation.extension.collectWithLifecycle
-import com.karuhun.feature.onboarding.presentation.navigation.OnBoarding
 import com.karuhun.launcher.core.designsystem.component.RunningText
 import com.karuhun.launcher.core.designsystem.component.TopBar
 import com.karuhun.launcher.core.designsystem.theme.AppTheme
-import com.karuhun.navigation.LauncherAppNavGraph
+import com.karuhun.navigation.MainAppNavGraph
+import com.karuhun.navigation.OnboardingNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,41 +59,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                var showScreenSaver by remember { mutableStateOf(true) }
-                val appState = rememberAppState()
                 val viewModel = hiltViewModel<MainViewModel>()
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                val uiEffect = viewModel.uiEffect
-                val onAction = viewModel::onAction
+                val navController = rememberNavController()
 
-//                if (showScreenSaver) {
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .focusable(true)
-//                            .clickable(true, onClick = {
-//                                showScreenSaver = false
-//                            }),
-//                    ){
-//                        Text(
-//                            text = "Screen Saver",
-//                            modifier = Modifier
-//                                .align(Alignment.Center)
-//                                .fillMaxWidth(),
-//                            color = Color.Black,
-//                        )
-//                    }
-//                } else {
-                    // Main Launcher Application
+                if (uiState.isOnboardingCompleted) {
                     LauncherApplication(
                         modifier = Modifier.fillMaxSize(),
-                        appState = appState,
+                        appState = rememberAppState(navController = navController),
                         uiState = uiState,
-                        uiEffect = uiEffect,
-                        onAction = onAction,
+                        uiEffect = viewModel.uiEffect,
+                        onAction = viewModel::onAction,
                         onMenuItemClick = {},
                     )
-//                }
+                } else {
+                    OnboardingNavGraph(
+                        navController = navController,
+                        onOnboardingComplete = {
+                            viewModel.onAction(MainContract.UiAction.OnboardingCompleted)
+                        }
+                    )
+                }
             }
         }
     }
@@ -124,11 +94,6 @@ fun LauncherApplication(
     onAction: (MainContract.UiAction) -> Unit,
     onMenuItemClick: (String) -> Unit,
 ) {
-    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    val isOnboardingRoute = currentRoute?.contains(OnBoarding.javaClass.simpleName) == true
-    Log.d("TAG", "LauncherApplication - Current Route: $currentRoute, isOnboarding: $isOnboardingRoute")
-
     Box(
         modifier = modifier,
     ) {
@@ -149,22 +114,18 @@ fun LauncherApplication(
 
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
+            Modifier
+                .fillMaxSize()
         ) {
-            AnimatedVisibility(
-                visible = !isOnboardingRoute,
-            ) {
-                TopBar(
-                    modifier = Modifier
-                        .height(80.dp),
-                    roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
-                    date = "06 April 2020",
-                    temperature = "${uiState.weather?.temp?.toInt()}°C",
-                    imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
-                    weatherText = uiState.weather?.icon.orEmpty()
-                )
-            }
+            TopBar(
+                modifier = Modifier
+                    .height(80.dp),
+                roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
+                date = "06 April 2020",
+                temperature = "${uiState.weather?.temp?.toInt()}°C",
+                imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
+                weatherText = uiState.weather?.icon.orEmpty()
+            )
 
             Row(
                 modifier = Modifier
@@ -173,32 +134,26 @@ fun LauncherApplication(
                         bottom = 0.dp,
                     ),
             ) {
-                LauncherAppNavGraph(
+                MainAppNavGraph(
                     modifier = Modifier
                         .fillMaxSize(),
                     navController = appState.navController,
                 )
             }
 
-            AnimatedVisibility(
-                visible = !isOnboardingRoute
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                RunningText(
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                        .fillMaxWidth(),
-                    text = uiState.hotelProfile?.runningText.orEmpty(),
-                )
-            }
-
+            Spacer(modifier = Modifier.height(24.dp))
+            RunningText(
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .fillMaxWidth(),
+                text = uiState.hotelProfile?.runningText.orEmpty(),
+            )
         }
-
     }
 }
 
 @Composable
-@Preview(device = TV_1080p)
+@Preview(device = Devices.TV_1080p)
 fun LauncherApplicationPreview() {
     val navController = rememberNavController()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -212,7 +167,7 @@ fun LauncherApplicationPreview() {
         modifier = Modifier.fillMaxSize(),
         appState = appState,
         onMenuItemClick = {},
-        uiState = MainContract.UiState(),
+        uiState = MainContract.UiState(isOnboardingCompleted = true),
         uiEffect = emptyFlow(),
         onAction = {},
     )

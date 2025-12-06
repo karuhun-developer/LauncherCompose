@@ -27,73 +27,51 @@ import com.karuhun.feature.itemlist.ui.navigation.ContentDetail
 import com.karuhun.feature.itemlist.ui.navigation.ContentItems
 import com.karuhun.feature.mainmenu.ui.navigation.MainMenu
 import com.karuhun.feature.mainmenu.ui.navigation.mainMenuScreen
-import com.karuhun.feature.onboarding.presentation.navigation.OnBoarding
-import com.karuhun.feature.onboarding.presentation.navigation.onboardingGraph
 import com.karuhun.feature.restaurant.ui.navigation.RestaurantCategory
 import com.karuhun.feature.restaurant.ui.navigation.restaurantGraph
 
 @Composable
-fun LauncherAppNavGraph(
+fun MainAppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = OnBoarding,
+        startDestination = Home,
     ) {
-        onboardingGraph(
-            onNavigateToHome = {
-                navController.apply {
-                    navigate(Home) {
-                        popUpTo(graph.startDestinationId) {
-                            inclusive = true
-                        }
-                    }
-                }
-            }
-        )
         homeScreen(
             onMenuItemClick = { menuItem ->
 
             },
             onGoToMainMenu = {
-                navController.apply {
-                    navigate(MainMenu)
-                    saveState()
-                }
+                navController.navigate(MainMenu)
             },
         )
         mainMenuScreen(
             onNavigateToContentItems = { content ->
-                navController.apply {
-                    navigate(
-                        ContentItems(
-                            id = content.id!!,
-                            name = content.title,
-                            image = content.image,
-                        ),
-                    )
-                }
+                navController.navigate(
+                    ContentItems(
+                        id = content.id!!,
+                        name = content.title,
+                        image = content.image,
+                    ),
+                )
             },
             onNavigateToRestaurant = {
-                navController.apply {
-                    navigate(RestaurantCategory)
-                }
+                navController.navigate(RestaurantCategory)
             },
         )
         contentScreen(
             onNavigateToDetail = {
-                navController.apply {
-                    navigate(
-                        ContentDetail(
-                            contentId = it.id,
-                            contentImage = it.image,
-                            contentTitle = it.name,
-                            contentDescription = it.description,
-                        ),
-                    )
-                }
+                navController.navigate(
+                    ContentDetail(
+                        contentId = it.id,
+                        contentImage = it.image,
+                        contentTitle = it.name,
+                        contentDescription = it.description,
+                    ),
+                )
             },
         )
         restaurantGraph()

@@ -61,6 +61,9 @@ class MainViewModel @Inject constructor(
             }
 
             MainContract.UiAction.LoadWeather -> loadWeather()
+            MainContract.UiAction.OnboardingCompleted -> {
+                updateUiState { copy(isOnboardingCompleted = true) }
+            }
         }
     }
 
