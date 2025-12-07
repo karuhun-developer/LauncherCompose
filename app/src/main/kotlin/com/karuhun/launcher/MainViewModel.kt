@@ -16,6 +16,7 @@
 
 package com.karuhun.launcher
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.karuhun.core.common.onFailure
@@ -42,6 +43,7 @@ class MainViewModel @Inject constructor(
         onAction(MainContract.UiAction.LoadHotelProfile)
         onAction(MainContract.UiAction.LoadRoomDetail)
         onAction(MainContract.UiAction.SubscribeSyncStatus)
+        onAction(MainContract.UiAction.LoadWeather)
     }
 
     override fun onAction(action: MainContract.UiAction) {
@@ -102,12 +104,13 @@ class MainViewModel @Inject constructor(
     private fun loadWeather() = viewModelScope.launch {
         getWeatherUseCase()
             .onSuccess {
+                Log.d("loadWeather", "loadWeather: $it")
                 updateUiState {
                     copy(weather = it)
                 }
             }
             .onFailure {
-
+                Log.d("loadWeather", "loadWeather: $it")
             }
     }
 }

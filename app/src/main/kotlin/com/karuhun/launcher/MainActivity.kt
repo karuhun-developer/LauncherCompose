@@ -29,7 +29,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -50,8 +54,11 @@ import com.karuhun.navigation.OnboardingNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -117,11 +124,24 @@ fun LauncherApplication(
             Modifier
                 .fillMaxSize()
         ) {
+            val formatter = remember { DateTimeFormatter.ofPattern("dd MMMM yyyy") }
+            var formattedDate by remember { mutableStateOf(LocalDate.now().format(formatter)) }
+
+            LaunchedEffect(Unit) {
+                while (true) {
+                    val newFormattedDate = LocalDate.now().format(formatter)
+                    if (formattedDate != newFormattedDate) {
+                        formattedDate = newFormattedDate
+                    }
+                    delay(1000L)
+                }
+            }
+
             TopBar(
                 modifier = Modifier
                     .height(80.dp),
                 roomNumber = DeviceUtil.getDeviceName(LocalContext.current),
-                date = "06 April 2020",
+                date = formattedDate,
                 temperature = "${uiState.weather?.temp?.toInt()}°C",
                 imageUrl = uiState.hotelProfile?.logoWhite.orEmpty(),
                 weatherText = uiState.weather?.icon.orEmpty()

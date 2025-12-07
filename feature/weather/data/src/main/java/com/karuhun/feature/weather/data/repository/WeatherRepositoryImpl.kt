@@ -1,5 +1,6 @@
 package com.karuhun.feature.weather.data.repository
 
+import android.util.Log
 import com.karuhun.core.common.Resource
 import com.karuhun.core.common.map
 import com.karuhun.core.domain.repository.WeatherRepository
@@ -15,10 +16,12 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository{
     override suspend fun getWeather(): Resource<Weather> {
         return safeApiCall {
-            apiService.getWeather(
+            val response = apiService.getWeather(
                 city = BuildConfig.CITY,
                 apiKey = BuildConfig.OPEN_WEATHER_API_KEY
             )
+            Log.d("TAG", "getWeather: $response")
+            response
         }.map {
             it.toDomain()
         }

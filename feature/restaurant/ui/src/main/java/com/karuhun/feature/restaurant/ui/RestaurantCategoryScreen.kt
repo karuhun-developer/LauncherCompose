@@ -101,7 +101,8 @@ internal fun RestaurantCategoryScreen(
 
     Row(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(24.dp),
     ) {
         LazyColumn(
             modifier = Modifier

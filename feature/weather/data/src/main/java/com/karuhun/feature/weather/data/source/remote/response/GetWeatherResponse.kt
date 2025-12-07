@@ -72,7 +72,7 @@ data class Main(
 	val seaLevel: Int? = null,
 
 	@field:SerializedName("feels_like")
-	val feelsLike: Any? = null,
+	val feelsLike: Double? = null,
 
 	@field:SerializedName("temp_max")
 	val tempMax: Double? = null
@@ -81,10 +81,10 @@ data class Main(
 data class Coord(
 
 	@field:SerializedName("lon")
-	val lon: Any? = null,
+	val lon: Double? = null,
 
 	@field:SerializedName("lat")
-	val lat: Any? = null
+	val lat: Double? = null
 )
 
 data class Sys(
@@ -120,10 +120,10 @@ data class Wind(
 	val deg: Int? = null,
 
 	@field:SerializedName("speed")
-	val speed: Any? = null,
+	val speed: Double? = null,
 
 	@field:SerializedName("gust")
-	val gust: Any? = null
+	val gust: Double? = null
 )
 
 fun GetWeatherResponse.toDomain(): Weather {

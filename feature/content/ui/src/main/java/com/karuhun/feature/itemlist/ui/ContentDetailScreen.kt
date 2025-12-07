@@ -58,6 +58,7 @@ fun ContentDetailScreen(
         LauncherCard(
             modifier = Modifier
                 .weight(2f)
+                .padding(16.dp)
                 .fillMaxHeight()
                 .focusable(enabled = false)
         ) {
@@ -74,6 +75,7 @@ fun ContentDetailScreen(
         LauncherCard(
             modifier = Modifier
                 .weight(1f)
+                .padding(end = 16.dp)
                 .fillMaxHeight()
                 .focusable(enabled = false)
         ) {
