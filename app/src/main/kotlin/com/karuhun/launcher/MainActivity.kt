@@ -59,11 +59,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.karuhun.launcher.model.RemoteConfigRepository
+import com.karuhun.launcher.model.RemoteConfigHolder
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+    try {
+        val cfg = RemoteConfigRepository.fetch()
+        RemoteConfigHolder.set(cfg)
+    } catch (_: Throwable) { }
+}
         setContent {
             AppTheme {
                 val viewModel = hiltViewModel<MainViewModel>()
