@@ -4,7 +4,7 @@ LauncherCompose is an open source launcher for Android TV applications built wit
 
 ## Dependencies
 
-Backend : [https://github.com/karuhun-developer/hotel](https://github.com/karuhun-developer/hotel)
+Backend : [https://github.com/headhonco7/gh-launcher-config](https://github.com/headhonco7/gh-launcher-config)
 
 ## Dependencies
 
@@ -38,12 +38,6 @@ The project uses the following major libraries and technologies:
     alt="Demo video of LauncherCompose">
     Your browser does not support the video element. You can view the demo at our website.
 </video>
-
-## Telegram Group
-
-You can join on telegram:
-
-[https://t.me/karhundeveloper](https://t.me/karhundeveloper)
 
 ## Dependency graph
 ![Dependency graph](docs/images/graphs/dep_graph_app.svg)
