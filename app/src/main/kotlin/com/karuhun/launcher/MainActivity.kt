@@ -80,7 +80,6 @@ class MainActivity : ComponentActivity() {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 val navController = rememberNavController()
 
-                if (uiState.isOnboardingCompleted) {
                     LauncherApplication(
                         modifier = Modifier.fillMaxSize(),
                         appState = rememberAppState(navController = navController),
@@ -89,14 +88,6 @@ class MainActivity : ComponentActivity() {
                         onAction = viewModel::onAction,
                         onMenuItemClick = {},
                     )
-                } else {
-                    OnboardingNavGraph(
-                        navController = navController,
-                        onOnboardingComplete = {
-                            viewModel.onAction(MainContract.UiAction.OnboardingCompleted)
-                        }
-                    )
-                }
             }
         }
     }
