@@ -1,4 +1,4 @@
-package com.karuhun.launcher.model
+package com.karuhun.core.common.config
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
