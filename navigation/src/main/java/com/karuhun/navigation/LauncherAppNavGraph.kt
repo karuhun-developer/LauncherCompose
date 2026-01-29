@@ -49,7 +49,9 @@ fun MainAppNavGraph(
         }
         homeScreen(
             onMenuItemClick = { menuItem ->
-
+                if (menuItem.title == "WIFI") {
+                    navController.navigate("wifi")
+                }
             },
             onGoToMainMenu = {
                 navController.navigate(MainMenu)
