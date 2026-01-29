@@ -30,6 +30,7 @@ import com.karuhun.feature.mainmenu.ui.navigation.mainMenuScreen
 import com.karuhun.feature.restaurant.ui.navigation.RestaurantCategory
 import com.karuhun.feature.restaurant.ui.navigation.restaurantGraph
 import com.karuhun.feature.home.ui.WifiInfoScreen
+import androidx.navigation.compose.composable
 
 @Composable
 fun MainAppNavGraph(
