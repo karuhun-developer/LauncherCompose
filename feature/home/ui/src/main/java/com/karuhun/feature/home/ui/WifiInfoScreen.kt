@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import com.karuhun.launcher.model.RemoteConfigHolder
+import com.karuhun.core.common.config.RemoteConfigHolder
 
 @Composable
 fun WifiInfoScreen(
