@@ -29,6 +29,7 @@ import com.karuhun.feature.mainmenu.ui.navigation.MainMenu
 import com.karuhun.feature.mainmenu.ui.navigation.mainMenuScreen
 import com.karuhun.feature.restaurant.ui.navigation.RestaurantCategory
 import com.karuhun.feature.restaurant.ui.navigation.restaurantGraph
+import com.karuhun.feature.home.ui.WifiInfoScreen
 
 @Composable
 fun MainAppNavGraph(
@@ -40,6 +41,11 @@ fun MainAppNavGraph(
         navController = navController,
         startDestination = Home,
     ) {
+        composable("wifi") {
+            WifiInfoScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
         homeScreen(
             onMenuItemClick = { menuItem ->
 
