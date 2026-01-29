@@ -9,5 +9,6 @@ android {
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(project(":core:common"))
     implementation("com.google.zxing:core:3.5.3")
 }
