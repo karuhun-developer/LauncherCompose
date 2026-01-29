@@ -1,4 +1,4 @@
-package com.karuhun.launcher.model
+package com.karuhun.core.common.config
 
 data class RemoteConfig(
     val version: Int = 1,
