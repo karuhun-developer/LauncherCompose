@@ -15,6 +15,6 @@
   -->
 
 <resources>
-    <string name="feature_home_ui_welcome">Welcome</string>
-    <string name="feature_home_ui_welcome_text">Its our pleasure to welcome you to our hotel. We will do everything in our power to make your stay most convenient and enjoyable.</string>
+    <string name="feature_home_ui_welcome">De AZKA</string>
+    <string name="feature_home_ui_welcome_text">Terima kasih sudah menjaga kenyamanan bersama dengan tidak merokok dalam kamar.</string>
 </resources>
