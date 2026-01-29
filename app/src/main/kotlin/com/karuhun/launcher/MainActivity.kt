@@ -61,8 +61,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import com.karuhun.launcher.model.RemoteConfigRepository
-import com.karuhun.launcher.model.RemoteConfigHolder
+import com.karuhun.core.common.config.RemoteConfigRepository
+import com.karuhun.core.common.config.RemoteConfigHolder
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
