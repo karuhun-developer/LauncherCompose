@@ -9,9 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.karuhun.launcher.model.RemoteConfigHolder
 
 @Composable
 fun WifiInfoScreen(
+    val cfg by RemoteConfigHolder.state.collectAsState()
+    val wifi = cfg.wifi
     onBack: () -> Unit,
 ) {
     Box(
@@ -34,7 +39,7 @@ fun WifiInfoScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             BasicText(
-                text = "SSID: AZKA_GUEST",
+                text = "SSID: ${wifi.ssid.ifBlank { "-" }}",
                 style = androidx.compose.ui.text.TextStyle(
                     color = Color.White,
                     fontSize = 20.sp
@@ -44,7 +49,7 @@ fun WifiInfoScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             BasicText(
-                text = "Password: 12345678",
+                text = "Password: ${wifi.password.ifBlank { "-" }}",
                 style = androidx.compose.ui.text.TextStyle(
                     color = Color.White,
                     fontSize = 20.sp
